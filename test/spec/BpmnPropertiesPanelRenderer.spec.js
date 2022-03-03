@@ -7,6 +7,7 @@ import {
 
 import {
   clearBpmnJS,
+  createCanvasEvent as canvasEvent,
   setBpmnJS,
   insertCoreStyles,
   insertBpmnStyles
@@ -241,6 +242,41 @@ describe('<BpmnPropertiesPanelRenderer>', function() {
 
     // then
     expect(result.error).not.to.exist;
+  });
+
+
+  // todo: remove me, integration test only
+  it.only('should create from template', async function() {
+
+    // given
+    const diagramXml = require('test/spec/provider/cloud-element-templates/fixtures/simple.bpmn').default;
+
+    const templates = require('test/spec/provider/cloud-element-templates/fixtures/complex.json');
+
+    const result = await createModeler(
+      diagramXml,
+      {
+        additionalModules: [
+          ZeebeModdleExtension,
+          BpmnPropertiesPanel,
+          BpmnPropertiesProvider,
+          CloudElementTemplatesPropertiesProvider
+        ],
+        moddleExtensions: {
+          zeebe: ZeebeModdle
+        },
+        elementTemplates: templates
+      }
+    );
+
+    const { modeler } = result;
+
+    const elementTemplates = modeler.get('elementTemplates');
+    const create = modeler.get('create');
+
+    // when
+    const element = elementTemplates.createElement(templates[0]);
+    create.start(canvasEvent({ x: 250, y: 300 }), element);
   });
 
 

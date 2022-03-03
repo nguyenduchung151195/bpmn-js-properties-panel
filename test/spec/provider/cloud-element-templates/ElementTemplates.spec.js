@@ -127,4 +127,25 @@ describe('provider/cloud-element-templates - ElementTemplates', function() {
 
   });
 
+
+  describe('createElement', function() {
+
+    it('should create element', inject(function(elementTemplates) {
+
+      // given
+      const templates = require('./fixtures/complex.json');
+
+      // when
+      const element = elementTemplates.createElement(templates[0]);
+
+      const extensionElements = element.businessObject.get('extensionElements');
+
+      // then
+      expect(element.businessObject.get('name')).to.eql('Rest Task');
+      expect(extensionElements).to.exist;
+      expect(extensionElements.get('values')).to.have.length(3);
+    }));
+
+  });
+
 });
