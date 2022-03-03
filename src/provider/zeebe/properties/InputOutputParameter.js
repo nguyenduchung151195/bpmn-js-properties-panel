@@ -1,4 +1,5 @@
 import {
+  getBusinessObject,
   is
 } from 'bpmn-js/lib/util/ModelUtil';
 
@@ -8,33 +9,41 @@ import {
   useService
 } from '../../../hooks';
 
+import { getPath } from '@philippfromme/moddle-helpers';
+
 
 export default function InputOutputParameter(props) {
-
   const {
+    element,
     idPrefix,
     parameter
   } = props;
 
-  const entries = [ {
-    id: idPrefix + '-target',
-    component: TargetProperty,
-    idPrefix,
-    parameter
-  },{
-    id: idPrefix + '-source',
-    component: SourceProperty,
-    idPrefix,
-    parameter
-  } ];
+  const businessObject = getBusinessObject(element);
+
+  const entries = [
+    {
+      id: idPrefix + '-target',
+      path: [ ...getPath(parameter, businessObject), 'target' ],
+      component: TargetProperty,
+      parameter
+    },
+    {
+      id: idPrefix + '-source',
+      path: [ ...getPath(parameter, businessObject), 'source' ],
+      component: SourceProperty,
+      parameter
+    }
+  ];
 
   return entries;
 }
 
 function TargetProperty(props) {
   const {
-    idPrefix,
     element,
+    id,
+    path,
     parameter
   } = props;
 
@@ -58,7 +67,8 @@ function TargetProperty(props) {
 
   return TextFieldEntry({
     element: parameter,
-    id: idPrefix + '-target',
+    id,
+    path,
     label: translate((is(parameter, 'zeebe:Input') ? 'Local variable name' : 'Process variable name')),
     getValue,
     setValue,
@@ -68,8 +78,9 @@ function TargetProperty(props) {
 
 function SourceProperty(props) {
   const {
-    idPrefix,
     element,
+    id,
+    path,
     parameter
   } = props;
 
@@ -93,7 +104,8 @@ function SourceProperty(props) {
 
   return TextFieldEntry({
     element: parameter,
-    id: idPrefix + '-source',
+    id,
+    path,
     label: translate('Variable assignment value'),
     getValue,
     setValue,

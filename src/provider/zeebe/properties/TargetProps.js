@@ -18,6 +18,8 @@ import {
 
 import { TextFieldEntry, isTextFieldEntryEdited } from '@bpmn-io/properties-panel';
 
+import { getPath } from '@philippfromme/moddle-helpers';
+
 
 export function TargetProps(props) {
   const {
@@ -28,9 +30,13 @@ export function TargetProps(props) {
     return [];
   }
 
+  const businessObject = getBusinessObject(element),
+        calledElement = getCalledElement(element);
+
   return [
     {
       id: 'targetProcessId',
+      path: calledElement ? [ ...getPath(calledElement, businessObject), 'processId' ] : undefined,
       component: TargetProcessId,
       isEdited: isTextFieldEntryEdited
     }

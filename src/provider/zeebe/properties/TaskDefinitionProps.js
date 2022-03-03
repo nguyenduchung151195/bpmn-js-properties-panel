@@ -20,6 +20,8 @@ import {
   isZeebeServiceTask
 } from '../utils/ZeebeServiceTaskUtil';
 
+import { getPath } from '@philippfromme/moddle-helpers';
+
 
 export function TaskDefinitionProps(props) {
   const {
@@ -30,14 +32,19 @@ export function TaskDefinitionProps(props) {
     return [];
   }
 
+  const businessObject = getBusinessObject(element),
+        taskDefinition = getTaskDefinition(element);
+
   return [
     {
       id: 'taskDefinitionType',
+      path: taskDefinition ? [ ...getPath(taskDefinition, businessObject), 'type' ] : undefined,
       component: TaskDefinitionType,
       isEdited: isTextFieldEntryEdited
     },
     {
       id: 'taskDefinitionRetries',
+      path: taskDefinition ? [ ...getPath(taskDefinition, businessObject), 'retries' ] : undefined,
       component: TaskDefinitionRetries,
       isEdited: isTextFieldEntryEdited
     }
@@ -46,7 +53,9 @@ export function TaskDefinitionProps(props) {
 
 function TaskDefinitionType(props) {
   const {
-    element
+    element,
+    id,
+    path
   } = props;
 
   const commandStack = useService('commandStack');
@@ -123,7 +132,8 @@ function TaskDefinitionType(props) {
 
   return TextFieldEntry({
     element,
-    id: 'taskDefinitionType',
+    id,
+    path,
     label: translate('Type'),
     getValue,
     setValue,
@@ -133,7 +143,9 @@ function TaskDefinitionType(props) {
 
 function TaskDefinitionRetries(props) {
   const {
-    element
+    element,
+    id,
+    path
   } = props;
 
   const commandStack = useService('commandStack');
@@ -209,7 +221,8 @@ function TaskDefinitionRetries(props) {
 
   return TextFieldEntry({
     element,
-    id: 'taskDefinitionRetries',
+    id,
+    path,
     label: translate('Retries'),
     getValue,
     setValue,

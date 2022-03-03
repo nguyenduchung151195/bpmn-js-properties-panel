@@ -34,6 +34,7 @@ export function NameProps(props) {
   return [
     {
       id: 'name',
+      path: [ 'name' ],
       component: Name,
       isEdited: isTextFieldEntryEdited
     }
@@ -42,7 +43,9 @@ export function NameProps(props) {
 
 function Name(props) {
   const {
-    element
+    element,
+    id,
+    path
   } = props;
 
   const modeling = useService('modeling');
@@ -54,7 +57,8 @@ function Name(props) {
   // (1) default: name
   let options = {
     element,
-    id: 'name',
+    id,
+    path,
     label: translate('Name'),
     debounce,
     setValue: (value) => {
