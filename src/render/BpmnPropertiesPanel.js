@@ -1,7 +1,7 @@
 import {
-  useState,
+  useEffect,
   useMemo,
-  useEffect
+  useState
 } from '@bpmn-io/properties-panel/preact/hooks';
 
 import {
@@ -190,7 +190,8 @@ export default function BpmnPropertiesPanel(props) {
       layoutConfig={ layoutConfig }
       layoutChanged={ onLayoutChanged }
       descriptionConfig={ descriptionConfig }
-      descriptionLoaded={ onDescriptionLoaded } />
+      descriptionLoaded={ onDescriptionLoaded }
+      eventBus={ eventBus } />
   </BpmnPropertiesPanelContext.Provider>;
 }
 
